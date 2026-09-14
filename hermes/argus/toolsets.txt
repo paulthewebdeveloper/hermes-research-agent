@@ -1,0 +1,7 @@
+web
+terminal
+file
+video
+vision
+skills
+memory

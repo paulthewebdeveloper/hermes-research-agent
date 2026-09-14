@@ -1,0 +1,5 @@
+description: Argus, the research worker. Turns a video URL into one source file in
+  raw/data/ with tools/farm.py, watches the on-screen moments, fills in what the
+  video covers and misses, and pushes it to NotebookLM on request. Never edits
+  wiki pages.
+description_auto: false

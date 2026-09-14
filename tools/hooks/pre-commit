@@ -1,0 +1,7 @@
+#!/bin/sh
+# Block any commit that leaves the wiki structurally broken.
+# Install once: git config core.hooksPath tools/hooks
+python3 tools/lint.py || {
+  echo "pre-commit: fix the lint errors above before committing."
+  exit 1
+}

@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Generated video-watch outputs
+out/
+download/
+frames/
+contact_sheet.jpg
+manifest.json
+report.md
+transcript.txt
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/
+
+# Local env
+.env
+.venv/
+venv/
