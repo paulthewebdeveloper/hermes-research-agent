@@ -5,8 +5,9 @@ YouTube link, and a worker agent pulls the transcript, **watches the frames for
 what's on screen**, files it into your knowledge base, and builds a NotebookLM
 notebook you can chat with.
 
-This is the setup from the video *I Stopped Watching YouTube. Now YouTubers
-Answer My Questions.* Setup takes about 30 minutes.
+This is the setup from the video
+**[I Stopped Watching YouTube. Now YouTubers Answer My Questions.](https://youtu.be/frDNPtWofIM)**
+Setup takes about 30 minutes.
 
 ```
  you ──► Hermes (main agent) ──hands off──► Argus (worker)
