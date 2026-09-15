@@ -5,8 +5,11 @@ YouTube link, and a worker agent pulls the transcript, **watches the frames for
 what's on screen**, files it into your knowledge base, and builds a NotebookLM
 notebook you can chat with.
 
-This is the setup from the video
-**[I Stopped Watching YouTube. Now YouTubers Answer My Questions.](https://youtu.be/frDNPtWofIM)**
+[![Watch: I Stopped Watching YouTube. Now YouTubers Answer My Questions.](docs/video-thumbnail.jpg)](https://youtu.be/frDNPtWofIM)
+
+**▶ Watch the walkthrough:** [I Stopped Watching YouTube. Now YouTubers Answer My Questions.](https://youtu.be/frDNPtWofIM)
+(5 minutes). More builds like this on [my channel](https://www.youtube.com/@heyitspaulb).
+
 Setup takes about 30 minutes.
 
 ```
