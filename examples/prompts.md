@@ -15,3 +15,8 @@ and the rules in AGENTS.md do the rest.
 
 **File something new**
 > <client> replied and accepted the price. Update their page and log it.
+
+**Any video: a reel, a TikTok, a file on your disk**
+> /path/to/my-old-reel.mp4 instagram.com/reels/DdR7QJBpxH4
+> tiktok.com/@hardknockspod/video/7672869091467644173
+> process all of these videos for me and launch argus to create notebook lms about each

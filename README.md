@@ -1,9 +1,10 @@
 # Hermes Research Agent
 
 An AI agent that knows your business and does your research for you. Give it a
-YouTube link, and a worker agent pulls the transcript, **watches the frames for
-what's on screen**, files it into your knowledge base, and builds a NotebookLM
-notebook you can chat with.
+YouTube link, an Instagram reel, a TikTok, or a video file on your disk, and a
+worker agent gets the transcript (or makes one locally when there are no
+captions), **watches the frames for what's on screen**, files it into your
+knowledge base, and builds a NotebookLM notebook you can chat with.
 
 [![Watch: I Stopped Watching YouTube. Now YouTubers Answer My Questions.](docs/video-thumbnail.jpg)](https://youtu.be/frDNPtWofIM)
 
@@ -39,6 +40,10 @@ model you already use.
 - [Hermes Agent](https://github.com/NousResearch/hermes-agent) installed and connected to a model
 - Python 3.10+, `git`, `ffmpeg`
 - `yt-dlp` (`brew install yt-dlp`, `pipx install yt-dlp`, or `uv`)
+- `whisper.cpp` for videos without captions (reels, TikToks, local files):
+  `brew install whisper-cpp`, then download a model, e.g.
+  `curl -L -o ~/ggml-large-v3-turbo.bin https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3-turbo.bin`
+  and put `export WHISPER_MODEL=~/ggml-large-v3-turbo.bin` in your shell profile
 - A Google account for NotebookLM
 - Optional: [Obsidian](https://obsidian.md) to browse the wiki as a graph
 
@@ -133,6 +138,15 @@ to you directly.
 Talk to your main Hermes agent:
 
 > Create a NotebookLM notebook about this video: https://www.youtube.com/watch?v=... Use Argus for it.
+
+Or several sources at once, including a file on your disk:
+
+> /path/to/my-old-reel.mp4 instagram.com/reels/... tiktok.com/@.../video/... process all of these videos for me and launch argus to create notebook lms about each
+
+Instagram and TikTok sometimes refuse anonymous downloads. If `farm.py` reports
+that, log in to them in Chrome and add `--cookies-from-browser chrome` to the
+yt-dlp calls in `tools/farm.py` (or set `HERMES_VIDEO_WATCH_COOKIES="chrome"`
+for the video skill).
 
 Hermes hands the job to Argus. Argus writes a file in `raw/data/` with the
 transcript plus what it saw on screen, then gives you a notebook link. Open it

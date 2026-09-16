@@ -1,25 +1,30 @@
 #!/usr/bin/env python3
-"""Farm a video URL into one source file in raw/data/.
+"""Farm any video into one source file in raw/data/.
 
-The mechanical half of an ingest: fetch the metadata and the captions, strip
-YouTube's rolling-caption repeats, and write one markdown file. It does NOT
-decide what the video means — the agent that reads the transcript afterwards
-fills the TODOs.
+Input can be a YouTube / Instagram / TikTok / any yt-dlp URL, or a local video
+file. Captions are used when the platform has them; otherwise the audio is
+transcribed locally with whisper.cpp (no API key). The file is written in the
+house format with three TODOs for the agent that reads it afterwards.
 
-    python3 tools/farm.py <url> [--dir <subfolder>] [--dry-run]
+    python3 tools/farm.py <url-or-file> [--dir <subfolder>] [--dry-run]
 
-Writes raw/data/[<dir>/]<upload-date>-<kebab-title>.md and prints the path.
+Writes raw/data/[<dir>/]<date>-<kebab-title>.md and prints the path.
 Refuses to overwrite: raw/ is immutable once written.
+
+Local transcription needs `whisper-cli` (brew install whisper-cpp) and a ggml
+model; set WHISPER_MODEL to the model path (see README).
 """
 
 import argparse
 import json
+import os
 import pathlib
 import re
 import shutil
 import subprocess
 import sys
 import tempfile
+from datetime import date
 
 REPO = pathlib.Path(__file__).resolve().parents[1]
 
@@ -29,7 +34,6 @@ def run(cmd):
 
 
 def ytdlp():
-    """yt-dlp on PATH, else the uvx shim."""
     if shutil.which("yt-dlp"):
         return ["yt-dlp"]
     if shutil.which("uvx"):
@@ -64,6 +68,33 @@ def clean_captions(vtt_text):
     return out
 
 
+def transcribe(media):
+    """Local speech-to-text with whisper.cpp. Returns [(stamp, text)]."""
+    if not shutil.which("whisper-cli"):
+        sys.exit("No captions and whisper-cli not found. brew install whisper-cpp, then set WHISPER_MODEL.")
+    model = os.environ.get("WHISPER_MODEL", "")
+    if not model or not pathlib.Path(model).is_file():
+        sys.exit("No captions and WHISPER_MODEL is not set to a ggml model file (see README).")
+    with tempfile.TemporaryDirectory() as tmp:
+        wav = f"{tmp}/a.wav"
+        r = run(["ffmpeg", "-v", "error", "-y", "-i", str(media), "-vn", "-ac", "1", "-ar", "16000",
+                 "-c:a", "pcm_s16le", wav])
+        if r.returncode != 0:
+            sys.exit(f"ffmpeg could not extract audio: {r.stderr.strip()[:300]}")
+        r = run(["whisper-cli", "-m", model, "-f", wav, "-l", "auto", "-oj", "-of", f"{tmp}/out", "-np"])
+        if r.returncode != 0:
+            sys.exit(f"whisper-cli failed: {r.stderr.strip()[:300]}")
+        segs = json.load(open(f"{tmp}/out.json")).get("transcription", [])
+    out = []
+    for s in segs:
+        text = (s.get("text") or "").strip()
+        if not text:
+            continue
+        ms = (s.get("offsets") or {}).get("from", 0)
+        out.append((f"{ms // 60000}:{(ms // 1000) % 60:02d}", text))
+    return out
+
+
 def paragraphs(lines, every=12):
     blocks, buf, start = [], [], None
     for stamp, text in lines:
@@ -79,60 +110,83 @@ def paragraphs(lines, every=12):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("url")
+    ap.add_argument("source", help="video URL, or path to a local video file")
     ap.add_argument("--dir", default="", help="subfolder under raw/data/")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
-    yt = ytdlp()
-    meta = run(yt + ["-J", "--no-warnings", "--skip-download", args.url])
-    if meta.returncode != 0:
-        sys.exit(f"yt-dlp could not read {args.url}:\n{meta.stderr.strip()[:400]}")
-    info = json.loads(meta.stdout)
+    local = pathlib.Path(args.source).expanduser()
+    is_file = local.is_file()
+    lines, how = [], ""
 
-    title = info.get("title") or "untitled"
-    channel = info.get("channel") or info.get("uploader") or "**[TODO: channel]**"
-    upload = info.get("upload_date") or ""
-    date = f"{upload[:4]}-{upload[4:6]}-{upload[6:]}" if len(upload) == 8 else "0000-00-00"
-    secs = int(info.get("duration") or 0)
+    if is_file:
+        title = local.stem.replace("_", " ").replace("-", " ")
+        channel = "local file"
+        day = date.fromtimestamp(local.stat().st_mtime).isoformat()
+        probe = run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(local)])
+        secs = int(float(probe.stdout.strip() or 0))
+        source_line = str(local)
+        if not args.dry_run:
+            lines, how = transcribe(local), "transcribed locally with whisper.cpp"
+    else:
+        yt = ytdlp()
+        meta = run(yt + ["-J", "--no-warnings", "--skip-download", args.source])
+        if meta.returncode != 0:
+            sys.exit(f"yt-dlp could not read {args.source}:\n{meta.stderr.strip()[:400]}")
+        info = json.loads(meta.stdout)
+        title = info.get("title") or "untitled"
+        channel = info.get("channel") or info.get("uploader") or "**[TODO: channel]**"
+        upload = info.get("upload_date") or ""
+        day = f"{upload[:4]}-{upload[4:6]}-{upload[6:]}" if len(upload) == 8 else "0000-00-00"
+        secs = int(info.get("duration") or 0)
+        source_line = args.source
+        has_captions = bool(info.get("subtitles") or info.get("automatic_captions"))
+        if not args.dry_run:
+            with tempfile.TemporaryDirectory() as tmp:
+                if has_captions:
+                    sub = run(yt + ["--skip-download", "--write-auto-subs", "--write-subs",
+                                    "--sub-langs", "en.*", "--sub-format", "vtt", "-o", f"{tmp}/cap", args.source])
+                    vtts = sorted(pathlib.Path(tmp).glob("*.vtt"))
+                    lines = clean_captions(vtts[0].read_text(errors="replace")) if vtts else []
+                    how = "auto-generated captions, de-duplicated"
+                    if not lines:
+                        err = (sub.stderr or "").strip().splitlines()
+                        sys.exit(f"{args.source} has captions but none downloaded. Nothing written.\n"
+                                 f"  {err[-1] if err else 'no error reported'}\n"
+                                 f"  HTTP 429 means the platform is rate-limiting: wait and re-run.")
+                else:
+                    # Instagram, TikTok and most reels: no caption track, so download the
+                    # audio and transcribe it locally.
+                    dl = run(yt + ["--no-warnings", "-f", "ba/b", "-o", f"{tmp}/media.%(ext)s", args.source])
+                    media = next(iter(pathlib.Path(tmp).glob("media.*")), None)
+                    if dl.returncode != 0 or media is None:
+                        sys.exit(f"yt-dlp could not download {args.source}:\n{dl.stderr.strip()[:400]}\n"
+                                 f"  Instagram/TikTok often need browser cookies: yt-dlp --cookies-from-browser chrome")
+                    lines, how = transcribe(media), "no captions; transcribed locally with whisper.cpp"
+
     duration = f"{secs // 60}:{secs % 60:02d}" if secs else "**[TODO: duration]**"
-
     out_dir = REPO / "raw" / "data" / args.dir
-    out = out_dir / f"{date}-{kebab(title)}.md"
+    out = out_dir / f"{day}-{kebab(title)}.md"
     if out.exists():
         sys.exit(f"{out.relative_to(REPO)} already exists. raw/ is immutable.")
 
-    # If YouTube says captions exist, an empty download is a failed fetch, not a
-    # silent video. A hollow source file is worse than crashing: it looks farmed.
-    has_captions = bool(info.get("subtitles") or info.get("automatic_captions"))
-
-    with tempfile.TemporaryDirectory() as tmp:
-        sub = run(yt + ["--skip-download", "--write-auto-subs", "--write-subs",
-                        "--sub-langs", "en.*", "--sub-format", "vtt",
-                        "-o", f"{tmp}/cap", args.url])
-        vtts = sorted(pathlib.Path(tmp).glob("*.vtt"))
-        lines = clean_captions(vtts[0].read_text(errors="replace")) if vtts else []
-
-    if has_captions and not lines:
-        err = (sub.stderr or "").strip().splitlines()
-        sys.exit(f"{args.url} has captions but none downloaded. Nothing written.\n"
-                 f"  {err[-1] if err else 'no error reported'}\n"
-                 f"  HTTP 429 means YouTube is rate-limiting: wait and re-run.")
+    if args.dry_run:
+        print(f"would write {out.relative_to(REPO)} ({'local file' if is_file else 'url'}, {duration})")
+        return
 
     body = "\n\n".join(paragraphs(lines)) if lines else \
-        "**[TODO: no captions. Transcribe or summarise by hand.]**"
-
+        "**[TODO: nothing transcribable. Summarise by hand.]**"
     doc = f"""# {title}
 
 *Video transcript, farmed by Argus. **[TODO: one line on why this was farmed.]***
 
 | | |
 |---|---|
-| URL | {args.url} |
+| Source | {source_line} |
 | Channel | {channel} |
-| Published | {date} |
+| Published | {day} |
 | Duration | {duration} |
-| Captions | {"auto-generated, de-duplicated" if lines else "none available"} |
+| Transcript | {how} |
 
 ## What this covers
 
@@ -146,10 +200,6 @@ def main():
 
 {body}
 """
-
-    if args.dry_run:
-        print(f"would write {out.relative_to(REPO)} ({len(lines)} caption lines)")
-        return
     out_dir.mkdir(parents=True, exist_ok=True)
     out.write_text(doc)
     print(out.relative_to(REPO))
