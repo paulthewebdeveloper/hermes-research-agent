@@ -8,8 +8,9 @@ knowledge base, and builds a NotebookLM notebook you can chat with.
 
 [![Watch: I Stopped Watching YouTube. Now YouTubers Answer My Questions.](docs/video-thumbnail.jpg)](https://youtu.be/frDNPtWofIM)
 
-**▶ Watch the walkthrough:** [I Stopped Watching YouTube. Now YouTubers Answer My Questions.](https://youtu.be/frDNPtWofIM)
-(5 minutes). More builds like this on [my channel](https://www.youtube.com/@heyitspaulb).
+**▶ Part 1:** [I Stopped Watching YouTube. Now YouTubers Answer My Questions.](https://youtu.be/frDNPtWofIM) (5 min)
+**▶ Part 2:** [Chat With Any TikTok, Reel or Video](https://youtu.be/-0lVqyLO2lk) (4 min): local files, reels and TikToks with no captions
+More builds like this on [my channel](https://www.youtube.com/@heyitspaulb).
 
 Setup takes about 30 minutes.
 
