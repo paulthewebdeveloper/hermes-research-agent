@@ -29,7 +29,7 @@ Setup takes about 30 minutes.
 |---|---|---|
 | **Wiki memory** | The agent's knowledge is a folder of markdown pages, one per thing in your business, so it reads a page instead of "remembering" | `AGENTS.md`, `wiki/`, `raw/` |
 | **Lint gate** | A pre-commit hook that blocks the agent from committing a broken wiki | `tools/lint.py`, `tools/hooks/pre-commit` |
-| **Argus, the worker** | One job: turn a video into a source file, including what was on screen, then push it to NotebookLM | `hermes/argus/`, `tools/farm.py`, `hermes/skills/hermes-video-watch/` |
+| **Argus, the worker** | One job: turn a video into a source file, including what was on screen, then push it to NotebookLM | `hermes/argus/`, `tools/farm.py`, `tools/whisper-stt.sh`, `hermes/skills/hermes-video-watch/` |
 | **Cerberus, the watchdog** | A plain shell script, no model, that messages you once when something breaks | `watchdog/cerberus.sh` |
 
 Everything is text files in git. No vector database, no subscription beyond the
@@ -93,6 +93,15 @@ mkdir -p ~/.hermes/skills/media
 ln -s ~/hermes-research-agent/hermes/skills/hermes-video-watch ~/.hermes/skills/media/hermes-video-watch
 python3 ~/.hermes/skills/media/hermes-video-watch/scripts/hermes_video_watch.py --help
 ```
+
+The skill transcribes with whisper.cpp too, through the wrapper in `tools/`. Add
+this to your shell profile next to `WHISPER_MODEL`:
+
+```bash
+export HERMES_VIDEO_WATCH_STT_COMMAND="$HOME/hermes-research-agent/tools/whisper-stt.sh {audio}"
+```
+
+No API key anywhere: captions when they exist, local Whisper when they don't.
 
 ### 5. Install the NotebookLM CLI
 
