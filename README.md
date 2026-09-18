@@ -12,7 +12,35 @@ knowledge base, and builds a NotebookLM notebook you can chat with.
 **▶ Part 2:** [Chat With Any TikTok, Reel or Video](https://youtu.be/-0IVqyLO2Ik) (4 min): local files, reels and TikToks with no captions
 More builds like this on [my channel](https://www.youtube.com/@heyitspaulb).
 
-Setup takes about 30 minutes.
+Setup takes about 30 minutes, or let your AI do it: **[SETUP-WITH-AI.md](SETUP-WITH-AI.md)** has one prompt
+you paste into Claude Code (or Codex, or any coding agent) and it builds the whole thing with you.
+
+## One brain, two agents
+
+**Claude Code builds. Hermes runs it while you're away. Both read the same wiki.**
+
+```
+ Claude Code ──reads + writes──►  wiki/  ◄──reads + writes── Hermes
+  (CLAUDE.md)                  markdown, git               (AGENTS.md)
+                               open it in Obsidian
+```
+
+`CLAUDE.md` tells Claude Code to follow `AGENTS.md`, the same rules Hermes reads. Decide something with one
+agent, and the other one reads it from the same page next session. No export, no re-explaining, and if a
+better tool comes along next year, you point it at the same folder.
+
+There are three kinds of memory in this setup, and only one is shared:
+
+| Layer | Holds | Read by |
+|---|---|---|
+| **The wiki** | everything true about your business, written on purpose | Claude Code **and** Hermes |
+| **Mem0** (optional Hermes plugin) | facts you mention in passing, saved automatically | Hermes |
+| **Hermes built-in memory** | how you like to work; two small files, about 3,500 characters | Hermes |
+
+Mem0 setup: `hermes memory setup`, choose mem0, paste a free key from [app.mem0.ai](https://app.mem0.ai).
+
+A worked example of "build once, run daily" is in **[examples/daily-report.md](examples/daily-report.md)**:
+a YouTube channel report that Hermes runs every morning with no AI model, so it costs nothing.
 
 ```
  you ──► Hermes (main agent) ──hands off──► Argus (worker)
@@ -29,6 +57,8 @@ Setup takes about 30 minutes.
 | Part | What it does | File |
 |---|---|---|
 | **Wiki memory** | The agent's knowledge is a folder of markdown pages, one per thing in your business, so it reads a page instead of "remembering" | `AGENTS.md`, `wiki/`, `raw/` |
+| **Shared brain** | Claude Code and Hermes follow the same rules and read the same pages | `CLAUDE.md`, `AGENTS.md`, `SETUP-WITH-AI.md` |
+| **Daily report example** | A script Hermes runs on a schedule with no model | `tools/youtube-report.py`, `examples/daily-report.md` |
 | **Lint gate** | A pre-commit hook that blocks the agent from committing a broken wiki | `tools/lint.py`, `tools/hooks/pre-commit` |
 | **Argus, the worker** | One job: turn a video into a source file, including what was on screen, then push it to NotebookLM | `hermes/argus/`, `tools/farm.py`, `tools/whisper-stt.sh`, `hermes/skills/hermes-video-watch/` |
 | **Cerberus, the watchdog** | A plain shell script, no model, that messages you once when something breaks | `watchdog/cerberus.sh` |
