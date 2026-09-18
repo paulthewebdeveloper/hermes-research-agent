@@ -1,19 +1,13 @@
 # Hermes Research Agent
 
-An AI agent that knows your business and does your research for you. Give it a
-YouTube link, an Instagram reel, a TikTok, or a video file on your disk, and a
-worker agent gets the transcript (or makes one locally when there are no
-captions), **watches the frames for what's on screen**, files it into your
-knowledge base, and builds a NotebookLM notebook you can chat with.
+**One shared brain for your AI tools.** Claude Code builds, Hermes runs it while you're away, and both
+read the same folder of notes, so you never explain yourself twice. On top of that brain sits a research
+worker that watches videos for you.
 
-[![Watch: I Stopped Watching YouTube. Now YouTubers Answer My Questions.](docs/video-thumbnail.jpg)](https://youtu.be/frDNPtWofIM)
+**Fastest way in:** open **[SETUP-WITH-AI.md](SETUP-WITH-AI.md)**, paste the prompt into Claude Code (or Codex, or any
+coding agent), and it builds your shared brain with you. By hand, setup takes about 30 minutes.
 
-**▶ Part 1:** [I Stopped Watching YouTube. Now YouTubers Answer My Questions.](https://youtu.be/frDNPtWofIM) (5 min)
-**▶ Part 2:** [Chat With Any TikTok, Reel or Video](https://youtu.be/-0IVqyLO2Ik) (4 min): local files, reels and TikToks with no captions
 More builds like this on [my channel](https://www.youtube.com/@heyitspaulb).
-
-Setup takes about 30 minutes, or let your AI do it: **[SETUP-WITH-AI.md](SETUP-WITH-AI.md)** has one prompt
-you paste into Claude Code (or Codex, or any coding agent) and it builds the whole thing with you.
 
 ## One brain, two agents
 
@@ -51,6 +45,18 @@ a YouTube channel report that Hermes runs every morning with no AI model, so it 
               ▲
  cerberus.sh (no AI) checks every hour that the server, site and wiki sync are healthy
 ```
+
+## The research worker (videos 1 and 2)
+
+Give Hermes a YouTube link, an Instagram reel, a TikTok, or a video file on your disk, and a
+worker agent gets the transcript (or makes one locally when there are no
+captions), **watches the frames for what's on screen**, files it into your
+knowledge base, and builds a NotebookLM notebook you can chat with.
+
+[![Watch: I Stopped Watching YouTube. Now YouTubers Answer My Questions.](docs/video-thumbnail.jpg)](https://youtu.be/frDNPtWofIM)
+
+**▶ Part 1:** [I Stopped Watching YouTube. Now YouTubers Answer My Questions.](https://youtu.be/frDNPtWofIM) (5 min)
+**▶ Part 2:** [Chat With Any TikTok, Reel or Video](https://youtu.be/-0IVqyLO2Ik) (4 min): local files, reels and TikToks with no captions
 
 ## What you get
 
