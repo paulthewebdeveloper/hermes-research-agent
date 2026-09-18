@@ -4,6 +4,8 @@
 read the same folder of notes, so you never explain yourself twice. On top of that brain sits a research
 worker that watches videos for you.
 
+**▶ Watch:** [I Gave Hermes And Claude Code One Brain](https://youtu.be/az7F75blZQ8) (9 min): the setup, what it costs, and a live demo.
+
 **Fastest way in:** open **[SETUP-WITH-AI.md](SETUP-WITH-AI.md)**, paste the prompt into Claude Code (or Codex, or any
 coding agent), and it builds your shared brain with you. By hand, setup takes about 30 minutes.
 
