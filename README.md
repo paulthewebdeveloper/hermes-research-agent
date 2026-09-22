@@ -1,5 +1,15 @@
 # Hermes Research Agent
 
+**Jev edits my videos now.** A skill for Claude Code (or any coding agent) that takes an OBS
+recording to a finished DaVinci Resolve timeline: Whisper transcribes, **Jev** judges which of your
+ten takes is the finished one, the script builds the cut, then trims the breaths. One command,
+about nine minutes. It is in **[claude/skills/youtube-video](claude/skills/youtube-video/)** —
+copy the folder into `~/.claude/skills/`, export `TYPESAFE_API_KEY`, and say "edit this folder".
+
+**▶ Watch:** [Jev Edited This Video](https://www.youtube.com/@heyitspaulb) (11 min): the pipeline run live on the video itself.
+
+---
+
 **One shared brain for your AI tools.** Claude Code builds, Hermes runs it while you're away, and both
 read the same folder of notes, so you never explain yourself twice. On top of that brain sits a research
 worker that watches videos for you.
@@ -69,6 +79,7 @@ knowledge base, and builds a NotebookLM notebook you can chat with.
 | **Daily report example** | A script Hermes runs on a schedule with no model | `tools/youtube-report.py`, `examples/daily-report.md` |
 | **Lint gate** | A pre-commit hook that blocks the agent from committing a broken wiki | `tools/lint.py`, `tools/hooks/pre-commit` |
 | **Argus, the worker** | One job: turn a video into a source file, including what was on screen, then push it to NotebookLM | `hermes/argus/`, `tools/farm.py`, `tools/whisper-stt.sh`, `hermes/skills/hermes-video-watch/` |
+| **YouTube pipeline** | OBS recording → transcript → Jev picks the takes → Resolve timeline → breath trim → thumbnails | `claude/skills/youtube-video/` |
 | **Cerberus, the watchdog** | A plain shell script, no model, that messages you once when something breaks | `watchdog/cerberus.sh` |
 
 Everything is text files in git. No vector database, no subscription beyond the

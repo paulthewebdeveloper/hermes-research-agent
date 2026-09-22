@@ -1,0 +1,9 @@
+Image 1 is a PHOTO OF ME: <hair, facial hair, what I'm wearing>. The person in the thumbnail must be me, real face, recognisable.
+
+Original YouTube thumbnail, 16:9, 1280x720. Do NOT imitate any existing creator's thumbnail. My channel look: <background, glow colour, rim light>. Bold white heavy sans-serif caps for text. At most one hand-drawn white marker arrow. High contrast, readable at phone size, nothing small.
+
+Image 2 is the OFFICIAL <PRODUCT> LOGO: <describe it>. Wherever <PRODUCT> appears, place this exact logo mark immediately to the left of the word, reproduced faithfully. Do not use any other company logo anywhere.
+
+Composition: <ONE paragraph. Where I am, my expression, what I hold or point at. The one object that carries the idea. The caption: exact words, where, which word is highlighted.>
+
+Text exactly as written, spelled correctly, no other text. Use your image generation tool to create this ONE image. Do not write code or draw it programmatically. Save it as <NAME>.png in the current directory and stop.
