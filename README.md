@@ -6,7 +6,7 @@ ten takes is the finished one, the script builds the cut, then trims the breaths
 about nine minutes. It is in **[claude/skills/youtube-video](claude/skills/youtube-video/)** —
 copy the folder into `~/.claude/skills/`, export `TYPESAFE_API_KEY`, and say "edit this folder".
 
-**▶ Watch:** [Jev Edited This Video](https://www.youtube.com/@heyitspaulb) (11 min): the pipeline run live on the video itself.
+**▶ Watch:** [Jev Edited This Video](https://youtu.be/RkVIuEzAm7Q) (11 min): the pipeline run live on the video itself.
 
 ---
 
