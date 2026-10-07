@@ -1,0 +1,26 @@
+{
+  "name": "Rita",
+  "role": "researcher",
+  "title": "Researcher",
+  "capabilities": "Daily channel numbers, upload reviews, topic shortlists. Learns through Hermes memory.",
+  "adapterType": "hermes_local",
+  "adapterConfig": {
+    "model": "claude-opus-5-5",
+    "provider": "anthropic",
+    "toolsets": "web,browser,file,terminal,memory,session_search,skills,delegation,todo,vision",
+    "maxTurnsPerRun": 50,
+    "timeoutSec": 1800,
+    "persistSession": false,
+    "cwd": "<your-path>/your-knowledge-base",
+    "instructionsEntryFile": "AGENTS.md",
+    "instructionsBundleMode": "managed",
+    "env": {
+      "HERMES_HOME": { "type": "plain", "value": "<your-path>/.hermes/profiles/researcher" },
+      "HOME": { "type": "plain", "value": "<your-path>" },
+      "PATH": { "type": "plain", "value": "<your PATH, including where hermes is installed>" }
+    }
+  },
+  "runtimeConfig": {
+    "heartbeat": { "enabled": false, "wakeOnDemand": true, "maxConcurrentRuns": 20 }
+  }
+}

@@ -1,5 +1,13 @@
 # Hermes Research Agent
 
+**An agent company that runs my channel, and the five settings I got wrong first.** Seven agents on a
+Paperclip board pick the topic, write the packaging, cut the video and read the numbers. The first
+version underperformed, and every reason was a default I left alone: the execution engine, memory,
+one install shared by five agents, every toolset on every agent, and a browser I could not hand over.
+The five settings and the config files to copy are in **[paperclip/](paperclip/)**.
+
+---
+
 **Jev edits my videos now.** A skill for Claude Code (or any coding agent) that takes an OBS
 recording to a finished DaVinci Resolve timeline: Whisper transcribes, **Jev** judges which of your
 ten takes is the finished one, the script builds the cut, then trims the breaths. One command,
@@ -79,6 +87,7 @@ knowledge base, and builds a NotebookLM notebook you can chat with.
 | **Daily report example** | A script Hermes runs on a schedule with no model | `tools/youtube-report.py`, `examples/daily-report.md` |
 | **Lint gate** | A pre-commit hook that blocks the agent from committing a broken wiki | `tools/lint.py`, `tools/hooks/pre-commit` |
 | **Argus, the worker** | One job: turn a video into a source file, including what was on screen, then push it to NotebookLM | `hermes/argus/`, `tools/farm.py`, `tools/whisper-stt.sh`, `hermes/skills/hermes-video-watch/` |
+| **Paperclip company** | Five settings for an agent company that does real work: engine, memory, one install per agent, toolsets, and a browser of its own | `paperclip/` |
 | **YouTube pipeline** | OBS recording → transcript → Jev picks the takes → Resolve timeline → breath trim → thumbnails | `claude/skills/youtube-video/` |
 | **Cerberus, the watchdog** | A plain shell script, no model, that messages you once when something breaks | `watchdog/cerberus.sh` |
 

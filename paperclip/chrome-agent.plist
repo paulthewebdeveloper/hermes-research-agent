@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ~/Library/LaunchAgents/com.example.chrome-agent.plist
+     An always-on Chrome that exists only for the agent: its own profile folder, its own debug
+     port, bound to localhost. Chrome 136+ ignores the debug port on your default profile, so this
+     is the way in, not a workaround. Log in to it once by hand, and keep nothing else in it.
+     Load it with:  launchctl load ~/Library/LaunchAgents/com.example.chrome-agent.plist -->
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.example.chrome-agent</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/Applications/Google Chrome.app/Contents/MacOS/Google Chrome</string>
+    <string>--user-data-dir=/Users/YOUR-USERNAME/.hermes/chrome-debug</string>
+    <string>--remote-debugging-port=9223</string>
+    <string>--remote-debugging-address=127.0.0.1</string>
+    <string>--no-first-run</string>
+    <string>--no-default-browser-check</string>
+  </array>
+  <key>RunAtLoad</key><true/>
+  <key>KeepAlive</key><dict><key>SuccessfulExit</key><false/></dict>
+</dict>
+</plist>

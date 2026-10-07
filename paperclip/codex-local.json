@@ -1,0 +1,26 @@
+{
+  "name": "Luna",
+  "role": "designer",
+  "title": "Thumbnails",
+  "capabilities": "Makes thumbnail images from the real footage, after the recording exists.",
+  "adapterType": "codex_local",
+  "adapterConfig": {
+    "engine": "cli",
+    "model": "gpt-5.6-sol",
+    "modelReasoningEffort": "medium",
+    "cwd": "<your-path>/your-working-folder",
+    "extraArgs": [
+      "--skip-git-repo-check",
+      "-c", "sandbox_mode=\"workspace-write\"",
+      "-c", "approval_policy=\"never\"",
+      "-c", "sandbox_workspace_write.network_access=true",
+      "-c", "sandbox_workspace_write.writable_roots=[\"<your-path>/.claude/skills/<the-skill-she-writes-lessons-into>\"]"
+    ],
+    "instructionsEntryFile": "AGENTS.md",
+    "instructionsBundleMode": "managed",
+    "dangerouslyBypassApprovalsAndSandbox": false
+  },
+  "runtimeConfig": {
+    "heartbeat": { "enabled": false, "wakeOnDemand": true, "maxConcurrentRuns": 20 }
+  }
+}

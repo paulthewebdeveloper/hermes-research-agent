@@ -1,0 +1,32 @@
+# ~/.hermes/profiles/researcher/config.yaml
+# The profile the hermes_local agent points at with HERMES_HOME.
+# One install, one agent. Memory on, and proven before you trust it.
+
+model:
+  default: claude-opus-5-5
+  provider: anthropic
+
+memory:
+  memory_enabled: true          # mistake 2: this was false, so nothing was ever learned
+  user_profile_enabled: true
+
+compression:
+  enabled: true                 # long research runs otherwise die on context
+
+agent:
+  max_turns: 50
+  reasoning_effort: medium
+
+skills:
+  external_dirs: []             # never point a Hermes profile at your Claude skills folder:
+                                # external skill directories are not write-protected
+
+platform_toolsets:
+  # mistake 4: every toolset was on, so the agent reached for the wrong one.
+  # This list is a researcher's job and nothing else. No computer_use, no image_gen, no cronjob.
+  cli: [web, browser, file, terminal, memory, session_search, skills, delegation, todo, vision]
+
+browser:
+  # mistake 5: the dedicated Chrome from chrome-agent.plist, not your real profile
+  cdp_url: http://127.0.0.1:9223
+  use_real_profile: false

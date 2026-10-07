@@ -1,0 +1,18 @@
+{
+  "name": "Fred",
+  "role": "cmo",
+  "title": "YouTube lead",
+  "capabilities": "Picks the next video, locks the packaging, takes a cut through publishing prep.",
+  "adapterType": "claude_local",
+  "adapterConfig": {
+    "engine": "cli",
+    "chrome": true,
+    "cwd": "<your-path>/your-knowledge-base",
+    "instructionsEntryFile": "AGENTS.md",
+    "instructionsBundleMode": "managed",
+    "dangerouslySkipPermissions": true
+  },
+  "runtimeConfig": {
+    "heartbeat": { "enabled": false, "wakeOnDemand": true, "maxConcurrentRuns": 20 }
+  }
+}
