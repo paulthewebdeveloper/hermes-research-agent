@@ -6,6 +6,8 @@ version underperformed, and every reason was a default I left alone: the executi
 one install shared by five agents, every toolset on every agent, and a browser I could not hand over.
 The five settings and the config files to copy are in **[paperclip/](paperclip/)**.
 
+**▶ Watch:** [Paperclip Now Runs My Company and My YouTube Channel](https://youtu.be/gNocjRQjupI) (6 min): the seven agents, what went wrong the first time, and how I use it.
+
 ---
 
 **Jev edits my videos now.** A skill for Claude Code (or any coding agent) that takes an OBS
